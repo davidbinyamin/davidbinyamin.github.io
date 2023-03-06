@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Canvas tutorial</title>
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function draw() {
+            const canvas = document.getElementById("tutorial");
+            if (canvas.getContext) {
+                const ctx = canvas.getContext("2d");
+                a = {
+                    x: 400,
+                    y: 0
+                }
+                b = {
+                    x: 0,
+                    y: 400
+                }
+                c = {
+                    x: 800,
+                    y: 400
+                }
+                indices = [a, b, c]
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = "black";
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.lineTo(c.x, c.y);
+                ctx.closePath()
+                ctx.stroke();
+                ctx.beginPath();
+
+                randomX = getRandomInt(2, 798)
+                console.log("randomx: " + randomX)
+                delta = 0
+                if (randomX > 400) {
+                    delta = randomX - 400
+                } else {
+                    delta = 400 - randomX
+                }
+                console.log("delta: " + delta)
+                randomY = getRandomInt(delta, 398)
+                console.log("randomY: " + randomY)
+
+                ctx.arc(randomX, randomY, 1, 0, 2 * Math.PI);
+                ctx.stroke();
+
+                point = {
+                    x: randomX,
+                    y: randomY
+                }
+                for (i = 0; i < 100000; i++) {
+                    await sleep(1);
+                    ind = getRandomInt(0, 3)
+                    console.log(ind)
+                    point.x = Math.floor((point.x + indices[ind].x) / 2)
+                    point.y = Math.floor((point.y + indices[ind].y) / 2)
+
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            }
+        }
+    </script>
+    <style>
+        canvas {
+            border: 0px solid white;
+
+        }
+    </style>
+</head>
+
+<body onload="draw();">
+    <canvas id="tutorial" width="800" height="800"></canvas>
+</body>
+
+</html>
